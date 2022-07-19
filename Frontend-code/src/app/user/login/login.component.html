@@ -1,0 +1,52 @@
+<style>
+    .container{
+        margin: auto;
+        width: 60%;
+        border: 2px solid ;
+        padding:10px;
+        background-color: rgb(100, 111, 131);
+    }
+    </style>
+<br><br>
+<div class="container">
+    <h3>Login Page</h3>
+    <br>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm)">
+        <div class="form-group">
+            <label for="userId">User Id:</label>
+            <input type="number" class="form-control" formControlName="userId" id="userId" [ngClass]="{'is-invalid':
+        loginForm.get('userId').touched && loginForm.get('userId').invalid}">
+            <div class="invalid-feedback">
+                <div>User Id is required !</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" formControlName="password" id="password" [ngClass]="{'is-invalid':
+            loginForm.get('password').touched && loginForm.get('password').invalid}">
+            <div class="invalid-feedback">
+                <div>Password is required !</div>
+            </div>
+        </div>
+        <div>
+            <label for="role">Role:</label>
+            <select class="form-control" formControlName="role" id="role" [ngClass]="{'is-invalid':
+            loginForm.get('role').touched && loginForm.get('role').invalid}">
+                <div class="invalid-feedback">
+                    <div>Role of User is required !</div>
+                </div>
+        <option value="employee">Employee</option>
+        <option value="admin">Admin</option>
+        </select>
+</div>
+<br>
+<button type="submit" class="btn btn-success">Login</button>
+<br>
+<div *ngIf="invalidLogin" class="error">
+    <div class="text-danger">Invalid credentials.</div>
+  </div>
+
+</form>
+</div>

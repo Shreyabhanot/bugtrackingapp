@@ -1,0 +1,76 @@
+package com.capgemini.controller;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.capgemini.constants.ExceptionHandlerMessages;
+import com.capgemini.exception.NotValidPasswordException;
+import com.capgemini.exception.NotValidRoleException;
+import com.capgemini.exception.UserNotFoundException;
+import com.capgemini.model.User;
+import com.capgemini.service.IUserService;
+
+@CrossOrigin
+@RestController
+@RequestMapping(path = "users")
+public class UserRestController {
+
+	@Autowired
+	private IUserService userService;
+
+	/**
+	 * This method creates a new User in database
+	 * @param user
+	 * @returnUser
+	 * @throws NotValidPasswordException
+	 * @throws NotValidRoleException
+	 */
+	// http://localhost:9090/BugApp/users - Post Method
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<User> createUser(@Valid @RequestBody User user) throws NotValidPasswordException, NotValidRoleException {
+		try {
+			User result = userService.createUser(user);
+			ResponseEntity<User> response = null;
+			if (result != null) {
+				response = new ResponseEntity<User>(result,HttpStatus.CREATED);
+			}
+			return response;
+		} 
+		catch (NotValidPasswordException e) {
+			throw new NotValidPasswordException(e.getMessage());
+		} catch (NotValidRoleException e) {
+			throw new NotValidRoleException(e.getMessage());
+		}
+	}
+	
+	/**
+	 * This method is for log in the valid user
+	 * @param user
+	 * @return String 
+	 * @throws UserNotFoundException
+	 */
+	// http://localhost:9090/BugApp/users - Post Method
+	@PostMapping(path ="login",consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> loginUser(@Valid @RequestBody User user) throws UserNotFoundException { 
+		System.out.println(user);
+		Boolean result = userService.login(user);
+		ResponseEntity<String> response = null;
+		if (result) {
+			response = new ResponseEntity<String>("LOGIN Successful !!",HttpStatus.OK);
+			return response;
+		}
+		else {
+		throw new UserNotFoundException(ExceptionHandlerMessages.USER_NOT_FOUND);
+		}
+	}
+
+}

@@ -1,0 +1,125 @@
+<div class="container">
+<br>
+<div style="background-color:  rgb(216, 212, 212);" class="col-md-6 col-md-offset-2">
+    <h2>Update the Bug Details</h2>
+    <br>
+    <form [formGroup]="editBug" (ngSubmit)="updateBug()">
+
+
+        <div class="form-group">
+            <label for="bugId">Bug Id:</label>
+            <input readonly="readonly" formControlName="bugId" type="text" placeholder="Bug Id" name="bugId" class="form-control"
+                id="bugId">
+        </div>
+
+        <div *ngIf="!userRole()" class="form-group">
+            <label for="title">Title:</label>
+            <input readonly="readonly" formControlName="title" type="text" placeholder="Enter title here" name="title" class="form-control"
+                id="title">
+        </div>
+
+        <div *ngIf="userRole()" class="form-group">
+            <label for="title">Title:</label>
+            <input formControlName="title" type="text" placeholder="Enter title here" name="title" class="form-control"
+                id="title">
+        </div>
+
+        <div *ngIf="!userRole()" class="form-group">
+            <label for="bugDesc">Description:</label>
+            <textarea readonly="readonly" formControlName="bugDesc" type="text" placeholder="Enter Bug Description here"
+                name="bugDesc" class="form-control" id="bugDesc">
+                </textarea>
+        </div>
+
+        <div *ngIf="userRole()" class="form-group">
+            <label for="bugDesc">Description:</label>
+            <textarea formControlName="bugDesc" type="text" placeholder="Enter Bug Description here"
+                name="bugDesc" class="form-control" id="bugDesc">
+                </textarea>
+        </div>
+
+        <div *ngIf="!userRole()" class="form-group">
+            <label for="type">Type:</label>
+            <select readonly="readonly" formControlName="type" name="type" class="form-control" id="type">
+                <option value="bug">Bug</option>
+                <option value="feature request">Feature Request</option>
+                <option value="improvement">Improvement</option>
+            </select>
+        </div>
+
+        <div *ngIf="userRole()" class="form-group">
+            <label for="type">Type:</label>
+            <select formControlName="type" name="type" class="form-control" id="type">
+                <option value="bug">Bug</option>
+                <option value="feature request">Feature Request</option>
+                <option value="improvement">Improvement</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select formControlName="status" name="status" class="form-control" id="status">
+            <option value="open">Open</option>
+            <option value="inProgress">In Progress</option>
+            <option value="closed">Closed</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="startDate"> Start Date:</label>
+            <input readonly="readonly" formControlName="startDate" type="date" name="startDate" class="form-control" id="startDate">
+        </div>
+
+        <div class="form-group">
+            <label for="endDate"> End Date:</label>
+            <input formControlName="endDate" type="date" name="endDate" class="form-control" id="endDate">
+        </div>
+
+        <div class="form-group">
+            <label for="priority">Priority: </label>
+            <select formControlName="priority" name="priority" class="form-control" id="priority">
+            <option value="high">High</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            </select>
+        </div>
+     
+
+        <div *ngIf="!userRole()" formGroupName="employee">
+            <div class="form-group">
+                <label for="employeeId">Employee Id</label>
+                <input readonly="readonly" type="number" class="form-control" id="employeeId" name="employeeId"
+                    formControlName="employeeId">
+            </div>
+
+        </div>
+
+        <div *ngIf="userRole()" formGroupName="employee">
+            <div class="form-group">
+                <label for="employeeId">Employee Id</label>
+                <input type="number" class="form-control" id="employeeId" name="employeeId"
+                    formControlName="employeeId">
+            </div>
+
+        </div>
+
+        <div *ngIf="!userRole()" formGroupName="project">
+            <div class="form-group">
+                <label for="projectId">Project Id</label>
+                <input readonly="readonly" type="number" class="form-control" id="projectId" name="projectId" formControlName="projectId">
+            </div>
+        </div>
+
+        <div *ngIf="userRole()" formGroupName="project">
+            <div class="form-group">
+                <label for="projectId">Project Id</label>
+                <input type="number" class="form-control" id="projectId" name="projectId" formControlName="projectId">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Update</button> &nbsp; &nbsp;
+        <a class="btn btn-primary" href="/list-bug" role="button">Cancel</a>
+    </form>
+    <br> <br> <br>
+</div>
+</div>

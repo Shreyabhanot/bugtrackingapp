@@ -1,0 +1,34 @@
+<div class="container">
+<br /><br />
+<div style="background-color:  rgb(216, 212, 212);" class="col-md-6 col-md-offset-2">
+  <h2>Add Project</h2>
+  <br />
+  <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label for="projectOwner">Project Owner:</label>
+      <input formControlName="projectOwner" placeholder="Project Owner" name="projectOwner" class="form-control"
+        id="projectOwner">
+      <div *ngIf="submitted && addForm.controls.projectOwner.errors" class="error">
+        <div class="text-danger" *ngIf="addForm.controls.projectOwner.errors.required">projectOwner is required</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status:</label>
+      <input type="status" formControlName="status" placeholder="status" name="status" class="form-control" id="status">
+      <div *ngIf="submitted && addForm.controls.status.errors" class="error">
+        <div class="text-danger" *ngIf="addForm.controls.status.errors.required">Status is required</div>
+      </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-success">Save</button>&nbsp; &nbsp;
+    <button class="btn btn-danger" type="reset">Cancel</button>
+    &nbsp; &nbsp;
+    <a class="btn btn-warning" href="/list-project">Back to List</a>
+
+    <br /><br />
+  </form>
+</div>
+</div>

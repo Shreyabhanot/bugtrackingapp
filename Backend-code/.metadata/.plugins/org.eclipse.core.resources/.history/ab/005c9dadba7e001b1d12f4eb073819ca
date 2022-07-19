@@ -1,0 +1,138 @@
+package com.capgemini.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.capgemini.constants.ExceptionHandlerMessages;
+import com.capgemini.dao.IBugRepository;
+import com.capgemini.dao.IEmployeeRepository;
+import com.capgemini.dao.IProjectRepository;
+import com.capgemini.exception.NoSuchBugFoundException;
+import com.capgemini.exception.NoSuchEmployeeException;
+import com.capgemini.exception.NoSuchProjectException;
+import com.capgemini.exception.NotValidEndDateException;
+import com.capgemini.model.Bug;
+import com.capgemini.model.Employee;
+import com.capgemini.model.Project;
+
+@Service("bugService")
+public class BugServiceImpl implements IBugService {
+
+	@Autowired
+	private IBugRepository bugRepository;
+
+	@Autowired
+	private IProjectRepository projectRepository;
+
+	@Autowired
+	private IEmployeeRepository employeeRepository;
+
+	@Override
+	@Transactional
+
+	public Bug createBug(Bug bug) throws NoSuchProjectException, NoSuchEmployeeException, NotValidEndDateException {
+		Bug result = null;
+		if (bug.getEndDate() == null || bug.getEndDate().compareTo(bug.getStartDate()) > 0) {
+			int projectId = bug.getProject().getProjectId();
+			int employeeId = bug.getEmployee().getemployeeId();
+			Optional<Project> projectResult = projectRepository.findById(projectId);
+			Optional<Employee> employeeResult = employeeRepository.findById(employeeId);
+			if (!projectResult.isPresent()) {
+				throw new NoSuchProjectException(ExceptionHandlerMessages.PROJECT_ID_NOT_FOUND);
+			} else if (!employeeResult.isPresent()) {
+				throw new NoSuchEmployeeException(ExceptionHandlerMessages.PROJECT_ID_NOT_FOUND);
+			} else {
+				result = bugRepository.save(bug);
+			}
+		} else {
+			throw new NotValidEndDateException(ExceptionHandlerMessages.NOT_VALID_END_DATE);
+		}
+		return result;
+	}
+
+	@Override
+	public Bug getBugById(int id) throws NoSuchBugFoundException {
+		Optional<Bug> result = bugRepository.findById(id);
+		Bug bug = null;
+		if (result.isPresent()) {
+			bug = result.get();
+		} else {
+			throw new NoSuchBugFoundException(ExceptionHandlerMessages.BUG_ID_NOT_FOUND);
+		}
+		return bug;
+	}
+
+	@Transactional
+	@Override
+	public Bug updateBug(Bug bug) {
+		return bugRepository.save(bug);
+	}
+
+	@Override
+	public List<Bug> getAllBugs() {
+		return bugRepository.findAll();
+	}
+
+	@Transactional
+	@Override
+	public boolean deleteBug(int id) throws NoSuchBugFoundException {
+
+		Optional<Bug> result = bugRepository.findById(id);
+		if (result.isPresent()) {
+			bugRepository.delete(result.get());
+			return true;
+		}
+			throw new NoSuchBugFoundException(ExceptionHandlerMessages.BUG_ID_NOT_FOUND);
+	}
+	
+	@Override
+	public List<Bug> getAllBugsByStatus(String status) {
+		return bugRepository.getAllBugsByStatus(status);
+	}
+	
+	@Override
+	public List<Bug> getAllBugsByPriority(String priority){
+		return bugRepository.getAllBugsByPriority(priority);
+	}
+
+	@Override
+	public List<Bug> getAllBugsByProjectId(int projectId) throws NoSuchProjectException {
+
+		Optional<Project> result = projectRepository.findById(projectId);
+		if (result.isPresent()) {
+			return bugRepository.getAllBugsByProjectId(projectId);
+		} else
+			throw new NoSuchProjectException(ExceptionHandlerMessages.PROJECT_ID_NOT_FOUND);
+	}
+
+	@Override
+	public List<Bug> getAllBugsByEmployeeId(int employeeId) throws NoSuchEmployeeException {
+
+		Optional<Employee> result = employeeRepository.findById(employeeId);
+		if (result.isPresent()) {
+			return bugRepository.getAllBugsByEmployeeId(employeeId);
+		}
+		throw new NoSuchEmployeeException(ExceptionHandlerMessages.EMPLOYEE_ID_NOT_FOUND);
+	}
+
+	@Override
+	public List<Bug> getAllBugByProjectIdAndByEmployeeId(int projectId, int employeeId)
+			throws NoSuchProjectException, NoSuchEmployeeException {
+
+		Optional<Project> projectResult = projectRepository.findById(projectId);
+		Optional<Employee> employeeResult = employeeRepository.findById(employeeId);
+
+		if (!projectResult.isPresent()) {
+			throw new NoSuchProjectException(ExceptionHandlerMessages.PROJECT_ID_NOT_FOUND);
+		} else if (!employeeResult.isPresent()) {
+			throw new NoSuchEmployeeException(ExceptionHandlerMessages.EMPLOYEE_ID_NOT_FOUND);
+		} else {
+			return bugRepository.getAllBugByProjectIdAndByEmployeeId(projectId, employeeId);
+		}
+	}
+
+}

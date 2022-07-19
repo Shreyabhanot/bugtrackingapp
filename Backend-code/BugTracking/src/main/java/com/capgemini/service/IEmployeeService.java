@@ -1,0 +1,19 @@
+package com.capgemini.service;
+
+import java.util.List;
+
+import com.capgemini.exception.EmployeeValidationException;
+import com.capgemini.exception.NoSuchEmployeeException;
+import com.capgemini.model.Employee;
+
+public interface IEmployeeService {
+
+	public Employee createEmployee(Employee employee) throws EmployeeValidationException;
+	public Employee updateEmployee(Employee employee) throws NoSuchEmployeeException;
+	public boolean deleteEmployee(int Id) throws NoSuchEmployeeException;
+	public Employee getEmployee(int id) throws NoSuchEmployeeException;
+	public  List<Employee> getAllEmployees();
+	Employee getAllEmployeeByEmail(String email);
+//	List<Employee> getAllEmployeeByName(String empName);
+	public List<Employee> getAllEmployeesByNameOrId(String empName);
+}

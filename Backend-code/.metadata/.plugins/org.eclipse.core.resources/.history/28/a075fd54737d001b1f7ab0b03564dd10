@@ -1,0 +1,226 @@
+package com.capgemini.controller;
+
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.capgemini.constants.ExceptionHandlerMessages;
+import com.capgemini.exception.NoSuchBugFoundException;
+import com.capgemini.exception.NoSuchEmployeeException;
+import com.capgemini.exception.NoSuchProjectException;
+import com.capgemini.exception.NotValidEndDateException;
+import com.capgemini.model.Bug;
+import com.capgemini.service.IBugService;
+
+@CrossOrigin
+@RestController
+@RequestMapping(path = "bugs")
+public class BugRestController {
+
+	@Autowired
+	private IBugService bugService;
+
+	// http://localhost:9090/BugApp/bugs
+
+	/**
+	 * This method creates the Bug
+	 * 
+	 * @param bug
+	 * @return Bug
+	 * @throws NoSuchProjectException
+	 * @throws NoSuchEmployeeException
+	 * @throws NotValidEndDateException
+	 */
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Bug> addBug(@Valid @RequestBody Bug bug)
+			throws NoSuchProjectException, NoSuchEmployeeException, NotValidEndDateException {
+		System.out.println(bug);
+		try {
+			Bug result = bugService.createBug(bug);
+			ResponseEntity<Bug> response = null;
+			if (result != null) {
+				response = new ResponseEntity<Bug>(result, HttpStatus.CREATED);
+		System.out.println(result);
+			}
+			return response;
+		} catch (NoSuchProjectException e) {
+			throw new NoSuchProjectException(e.getMessage());
+		} catch (NoSuchEmployeeException e) {
+			throw new NoSuchEmployeeException(e.getMessage());
+		} catch (NotValidEndDateException e) {
+			throw new NotValidEndDateException(e.getMessage());
+		}
+	}
+
+	/**
+	 * This method returns the Bug by the Id
+	 * 
+	 * @param bugId
+	 * @return Bug
+	 * @throws NoSuchBugFoundException
+	 */
+	// http://localhost:9090/BugApp/bugs/
+	@GetMapping(path = "{bugId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Bug> findBugById(@PathVariable("bugId") int bugId) throws NoSuchBugFoundException {
+		Bug result = bugService.getBugById(bugId);
+		ResponseEntity<Bug> response = null;
+		if (result != null) {
+			response = new ResponseEntity<Bug>(result, HttpStatus.OK);
+			return response;
+		} else {
+			throw new NoSuchBugFoundException(ExceptionHandlerMessages.BUG_ID_NOT_FOUND);
+		}
+	}
+
+	/**
+	 * This method returns all the Bug present in database
+	 * 
+	 * @return List<Bug>
+	 */
+
+	// http://localhost:9090/BugApp/bugs
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<Bug> getAllBugs() {
+		List<Bug> bugs = bugService.getAllBugs();
+		return bugs;
+	}
+
+	/**
+	 * This method Updates the given Bug
+	 * 
+	 * @param Bug
+	 * @return Bug
+	 */
+	// http://localhost:9090/BugApp/bugs
+	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Bug updateBug(@RequestBody Bug bug) {
+		return bugService.updateBug(bug);
+	}
+
+	/**
+	 * This method deletes the Bug By Id
+	 * 
+	 * @param bugId
+	 * @return boolean
+	 * @throws NoSuchBugFoundException
+	 */
+	// http://localhost:9090/BugApp/bugs/
+	@DeleteMapping(path = "{bugId}")
+	public ResponseEntity<Bug> deleteBugById(@PathVariable("bugId") int bugId) throws NoSuchBugFoundException {
+		boolean result = bugService.deleteBug(bugId);
+		ResponseEntity<Bug> response = null;
+		if (result) {
+			response = new ResponseEntity<Bug>(HttpStatus.NO_CONTENT);
+			return response;
+		}
+		throw new NoSuchBugFoundException(ExceptionHandlerMessages.BUG_ID_NOT_FOUND);
+
+	}
+
+	/**
+	 * This method return the List of Bug by its Status
+	 * 
+	 * @param status
+	 * @return List<Bug>
+	 */
+	// http://localhost:9090/BugApp/bugs/byStatus/
+	@GetMapping(path = "byStatus/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<Bug> getBugByStatus(@PathVariable("status") String status) {
+		return bugService.getAllBugsByStatus(status);
+	}
+	/**
+	 * This method return the List of Bug by its Priority
+	 * @param priority
+	 * @return List<Bug>
+	 */
+	
+	// http://localhost:9090/BugApp/bugs/byStatus/
+	@GetMapping(path="byPriority/{priority}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<Bug> getBugByPriority(@PathVariable("priority") String priority){
+		return bugService.getAllBugsByPriority(priority);
+	}
+
+	/**
+	 * This method return the List of Bug found in particular project
+	 * @param projectId
+	 * @return List<Bug>
+	 * @throws NoSuchProjectException
+	 */
+	// http://localhost:9090/BugApp/bugs/byProjectId/0
+	@GetMapping(path = "byProjectId/{projectId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Bug>> getAllBugsByProjectId(@PathVariable("projectId") int projectId)
+			throws NoSuchProjectException {
+		List<Bug> result = bugService.getAllBugsByProjectId(projectId);
+		ResponseEntity<List<Bug>> response = null;
+		if (result != null) {
+			response = new ResponseEntity<List<Bug>>(result, HttpStatus.OK);
+			return response;
+		} else {
+			throw new NoSuchProjectException(ExceptionHandlerMessages.PROJECT_ID_NOT_FOUND);
+		}
+	}
+
+	/**
+	 * This method return the List of Bugs assigned to particular Employee Id
+	 * 
+	 * @param employeeId
+	 * @return List<Bug>
+	 * @throws NoSuchEmployeeException
+	 */
+	// http://localhost:9090/BugApp/bugs/byEmployeeId/0
+	@GetMapping(path = "byEmployeeId/{employeeId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Bug>> getAllBugsByEmployeeId(@PathVariable("employeeId") int employeeId)
+			throws NoSuchEmployeeException {
+		List<Bug> result = bugService.getAllBugsByEmployeeId(employeeId);
+		ResponseEntity<List<Bug>> response = null;
+		if (result != null) {
+			response = new ResponseEntity<List<Bug>>(result, HttpStatus.OK);
+			return response;
+		} else {
+			throw new NoSuchEmployeeException(ExceptionHandlerMessages.EMPLOYEE_ID_NOT_FOUND);
+		}
+	}
+
+	/**
+	 * This method return the List of Bug found in particular project and assigned
+	 * to particular employee
+	 * 
+	 * @param projectId
+	 * @param employeeId
+	 * @return List<Bug>
+	 * @throws NoSuchProjectException
+	 * @throws NoSuchEmployeeException
+	 */
+	// http://localhost:9090/BugApp/bugs/byProjectId/0/byEmployeeId/0
+	@GetMapping(path = "byProjectId/{projectId}/byEmployeeId/{employeeId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Bug>> getAllBugByProjectIdAndByEmployeeId(@PathVariable("projectId") int projectId,
+			@PathVariable("employeeId") int employeeId) throws NoSuchProjectException, NoSuchEmployeeException {
+		try {
+			List<Bug> result = bugService.getAllBugByProjectIdAndByEmployeeId(projectId, employeeId);
+			ResponseEntity<List<Bug>> response = null;
+			if (result != null) {
+				response = new ResponseEntity<List<Bug>>(result, HttpStatus.OK);
+			}
+			return response;
+		} catch (NoSuchProjectException e) {
+			throw new NoSuchProjectException(e.getMessage());
+		} catch (NoSuchEmployeeException e) {
+			throw new NoSuchEmployeeException(e.getMessage());
+		}
+	}
+
+}

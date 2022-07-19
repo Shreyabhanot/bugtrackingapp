@@ -1,0 +1,146 @@
+package com.capgemini.controller;
+
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.capgemini.constants.ExceptionHandlerMessages;
+import com.capgemini.exception.EmployeeValidationException;
+import com.capgemini.exception.NoSuchEmployeeException;
+import com.capgemini.model.Employee;
+import com.capgemini.service.IEmployeeService;
+
+@CrossOrigin
+@RestController
+@RequestMapping(path = "employee")
+public class EmployeeRestController {
+	
+	@Autowired
+	private IEmployeeService employeeService;
+	
+	/**
+	 * This Will add new Employees in the database
+	 * @param employee
+	 * @return employee
+	 * @throws EmployeeValidationException
+	 */
+//  http://localhost:9090/BugApp/employee 
+	@PostMapping(consumes = "application/json")
+	public ResponseEntity<Employee> addEmployee(@Valid @RequestBody Employee employee)
+			throws EmployeeValidationException {
+		Employee result = employeeService.createEmployee(employee);
+		ResponseEntity<Employee> response = null;
+
+		response = new ResponseEntity<Employee>(result, HttpStatus.CREATED);
+		return response;
+	}
+	
+	/**
+	  * This Process will help in finding any employee with its Id	
+	  * @param employeeId
+	  * @return
+	  * @throws NoSuchEmployeeException
+	  */
+	// http://localhost:9090/BugApp/employee/
+	@GetMapping(path = "{employeeId}", produces = "application/json")
+	public ResponseEntity<Employee> findEmployeeById(@PathVariable("employeeId") int employeeId)
+			throws NoSuchEmployeeException {
+		Employee result = employeeService.getEmployee(employeeId);
+		ResponseEntity<Employee> response = null;
+		if (result != null) {
+			response = new ResponseEntity<Employee>(result, HttpStatus.OK);
+			return response;
+		} else {
+			throw new NoSuchEmployeeException(ExceptionHandlerMessages.EMPLOYEE_ID_NOT_FOUND);
+		}
+	}
+
+	/**
+	 * This will bring out the lit of all the employees that exist in the database
+	 * @return employee list
+	 */
+//  http://localhost:9090/BugApp/employee
+	@GetMapping(produces = "application/json")
+	public List<Employee> getAllStudents() {
+		List<Employee> result = employeeService.getAllEmployees();
+		return result;
+	}
+	
+	/**
+	  * This will Update the details of the employee	
+	  * @param employee
+	  * @return employee
+	  * @throws NoSuchEmployeeException
+	  */
+//  http://localhost:9090/BugApp/employee
+	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Employee updateEmployee(@Valid @RequestBody Employee employee) throws NoSuchEmployeeException {
+		Employee result = employeeService.updateEmployee(employee);
+		if (result != null) {
+			return result;
+		}
+		throw new NoSuchEmployeeException(ExceptionHandlerMessages.EMPLOYEE_ID_NOT_FOUND);
+	}
+	
+	/**
+	  * This will delete the Employee
+	  * @param employeeId
+	  * @return
+	  * @throws NoSuchEmployeeException
+	  */
+	// http://localhost:9090/BugApp/employee/1
+	@DeleteMapping(path = "{employeeId}", produces = "application/json")
+	public ResponseEntity<Employee> deleteEmployeeById(@PathVariable("employeeId") int employeeId)
+			throws NoSuchEmployeeException {
+		boolean result = employeeService.deleteEmployee(employeeId);
+		ResponseEntity<Employee> response = null;
+		if (result) {
+			response = new ResponseEntity<Employee>(HttpStatus.NO_CONTENT);
+			return response;
+		}
+		throw new NoSuchEmployeeException(ExceptionHandlerMessages.EMPLOYEE_ID_NOT_FOUND);
+	}
+	
+	/**
+	 * This will get the employees based on their email id.	
+	 * @param email 
+	 * @return employee
+	 */
+	// http://localhost:9090/BugApp/employee/byEmail/
+	@GetMapping(path = "byEmail/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Employee getAllEmployeeByEmail(@PathVariable("email") String email) {
+		return employeeService.getAllEmployeeByEmail(email);
+	}
+	
+	/**
+	 * This will get the employees based on their names.
+	 * @param empName
+	 * @return employee
+	 */
+	// http://localhost:9090/BugApp/employee/byName/
+	@GetMapping(path = "byName/{empName}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<Employee> getAllEmployeeByName(@PathVariable("empName") String empName) {
+		return employeeService.getAllEmployeeByName(empName);
+	}
+	
+	@GetMapping(path = "byId/{Id}",produces = "application/json")
+	public List<Employee> getEmployeeSearchById(@Valid @PathVariable("Id") int Id) {
+		List<Employee> result = employeeService.getAllEmployeesById(Id);
+		return result;
+	}
+
+}

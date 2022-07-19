@@ -1,0 +1,66 @@
+package com.capgemini.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.capgemini.constants.ExceptionHandlerMessages;
+import com.capgemini.dao.IUserRepository;
+import com.capgemini.exception.NotValidPasswordException;
+import com.capgemini.exception.NotValidRoleException;
+import com.capgemini.exception.UserNotFoundException;
+import com.capgemini.model.User;
+
+@Service("userService")
+public class UserServiceImpl implements IUserService {
+
+	@Autowired
+	private IUserRepository userRepository;
+
+	@Override
+	@Transactional
+	public User createUser(User user) throws NotValidPasswordException, NotValidRoleException {
+		User result =null;
+		if (validateUser(user)) {
+			result = userRepository.save(user);
+		}
+		return result;
+	}
+
+	@Override
+	public boolean login(User user) throws UserNotFoundException {
+		Optional<User> checkUser = userRepository.findById(user.getUserId());
+		User result = null;
+		System.out.println(user);
+		if (checkUser.isPresent()) {
+			System.out.println(user);
+			result = checkUser.get();
+			if ((user.getPassword().equals(result.getPassword())) && (user.getRole().equals(result.getRole()))) {
+				return true;	
+			}
+		}
+		throw new UserNotFoundException(ExceptionHandlerMessages.USER_NOT_FOUND);
+	}
+
+
+	public boolean validateUser(User user) throws NotValidPasswordException, NotValidRoleException {
+		String role1 = "admin";
+		String role2 = "employee";
+
+		if (!(user.getPassword().matches("^(?=.*[A-Za-z].*)(?=.*[0-9].*)[A-Za-z0-9]{7,}$")))
+			throw new NotValidPasswordException(ExceptionHandlerMessages.NOT_VALID_PASSWORD);
+
+		else if (!(user.getRole().equalsIgnoreCase(role1)) && !(user.getRole().equalsIgnoreCase(role2)))
+			throw new NotValidRoleException(ExceptionHandlerMessages.NOT_VALID_ROLE);
+		return true;
+	}
+
+	@Override
+	public User logout(User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

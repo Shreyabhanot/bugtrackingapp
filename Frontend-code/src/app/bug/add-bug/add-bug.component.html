@@ -1,0 +1,98 @@
+<div class="container">
+
+<br>
+<div style="background-color:  rgb(216, 212, 212);" class="col-md-10 col-md-offset-2">
+    <br>
+    <h2>Report a Bug</h2>
+    <br>
+    <form [formGroup]="addBug" (ngSubmit)="createBug()">
+
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input formControlName="title" type="text" placeholder="Enter title here" name="title" class="form-control"
+                id="title" [ngClass]="{'is-invalid':
+                addBug.get('title').touched && addBug.get('title').invalid}">
+            <div class="invalid-feedback">
+                <div>Title is required !</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="bugDesc">Description:</label>
+            <textarea formControlName="bugDesc" type="text" placeholder="Enter Bug Description here" name="bugDesc"
+                class="form-control" id="bugDesc">
+                </textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="type">Type:</label>
+            <select formControlName="type" name="type" class="form-control" id="type" [ngClass]="{'is-invalid':
+            addBug.get('type').touched && addBug.get('type').invalid}">
+                <div class="invalid-feedback">
+                    <div>Type should be selected !</div>
+                </div>
+                <option value="bug">Bug</option>
+                <option value="feature request">Feature Request</option>
+                <option value="improvement">Improvement</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select formControlName="status" name="status" class="form-control" id="status"[ngClass]="{'is-invalid':
+            addBug.get('type').touched && addBug.get('type').invalid}"> 
+            <div class="invalid-feedback">
+                <div> Status should be selected !</div>
+            </div>
+            <option value="open">Open</option>
+            <option value="inProgress">In Progress</option>
+            <option value="closed">Closed</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="startDate"> Start Date:</label>
+            <input formControlName="startDate" type="date" name="startDate" class="form-control" id="startDate" [ngClass]="{'is-invalid':
+            addBug.get('startDate').touched && addBug.get('startDate').invalid}"> 
+            <div class="invalid-feedback">
+                <div> Start Date be selected !</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="endDate"> End Date:</label>
+            <input formControlName="endDate" type="date" name="endDate" class="form-control" id="endDate">
+        </div>
+        <div class="form-group">
+            <label for="priority">Priority: </label>
+            <select formControlName="priority" name="priority" class="form-control" id="priority" [ngClass]="{'is-invalid':
+            addBug.get('priority').touched && addBug.get('priority').invalid}"> 
+            <div class="invalid-feedback">
+                <div> Status should be selected !</div>
+            </div>
+            <option value="high">High</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            </select>
+        </div>
+
+
+        <div formGroupName="employee">
+            <div class="form-group">
+                <label for="employeeId">Employee Id</label>
+                <input type="number" class="form-control" id="employeeId" name="employeeId"
+                    formControlName="employeeId">
+            </div>
+
+        </div>
+        <div formGroupName="project">
+            <div class="form-group">
+                <label for="projectId">Project Id</label>
+                <input type="number" class="form-control" id="projectId" name="projectId" formControlName="projectId">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Report</button> &nbsp; &nbsp;
+        <a class="btn btn-warning" href="/list-bug" role="button">Cancel</a>
+    </form>
+    <br> <br>
+</div>
+</div>

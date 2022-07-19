@@ -1,0 +1,113 @@
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+
+
+    .wrapper {
+        width: 1170px;
+        margin: 0 auto;
+
+    }
+
+    header {
+        height: 120px;
+        background: initial;
+        width: 100%;
+        /* background-image: repeat; */
+
+        transform: 20px;
+        background-blend-mode: screen;
+        background: url(../assets/bug4.jpg);
+
+
+    }
+
+    nav {
+        float: right;
+        line-height: 90px;
+    }
+
+    nav a {
+        text-decoration: none;
+        font-family: sans-serif;
+        letter-spacing: 2px;
+        font-size: 20px;
+        margin: 0 10px;
+        color: rgb(221, 206, 195);
+
+    }
+
+    .logo {
+        height: 40px;
+    }
+
+    .banner {
+        width: 100%;
+        height: 500px;
+        position: fixed;
+        top: 120px;
+        opacity: 60px;
+        background-blend-mode: soft-light;
+        background: url(../assets/bug4.jpg);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center center;
+        overflow: scroll;
+        color: rgb(12, 12, 11);
+    }
+
+    .scroller {
+        overflow: scroll;
+    }
+</style>
+
+<!-- <div class ="header"style="color:white; background-color: rgb(65, 60, 65); padding: 10px; height: 200px " >
+    <div class="logo"><img src="../assets/images/logo_size_invert.jpg"  width="150px" height="150px"/></div>
+    <span><h2  style="text-align:center;  align-content: center; text-align: center;">BUGZILLA </h2></span>
+</div> -->
+
+<div class="box-area">
+    <header>
+
+        <div class="wrapper">
+            <div class="logo">
+                <a href="#"><img src="../assets/LOGO.png" height="170px" width="300px"
+                        style="background-blend-mode: saturation;"></a>
+            </div>
+            <nav>
+
+                <span *ngIf="loggedIn() && !userRole()"> <a href="/list-bug">Bug Details</a></span>
+                <span *ngIf="loggedIn() && !userRole()"> <a href="/list-employee">Employee Details</a></span>
+                <span *ngIf="loggedIn() && !userRole()"><a href="/list-project">Project Details</a></span>
+                <span *ngIf="loggedIn() && userRole()"><a href="/home-admin">Home</a></span>
+                <span *ngIf="loggedIn()"> <a href="/login-page" (click)=onLogOut()>Log Out</a></span>
+            </nav>
+
+
+        </div>
+    </header>
+
+
+
+
+    <div class="banner">
+        <router-outlet></router-outlet>
+    </div>
+    <div>
+        <footer style="position: fixed; 
+        padding: 10px 10px 0px 10px; 
+        margin: 0px 50px 0px 0px;
+        text-align: center;
+        bottom: 0; 
+        width: 100%; 
+        /* Height of the footer*/  
+        height: 40px; 
+        background: grey;
+        "><span class="text-danger"><strong>This site is copyright &copy; to Capgemini. 
+          All rights are reserved here ..!</strong></span></footer>
+    </div>
+</div>

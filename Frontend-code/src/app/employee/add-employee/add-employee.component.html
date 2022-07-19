@@ -1,0 +1,49 @@
+
+<div class="container">
+<br /><br />
+<div style="background-color:  rgb(216, 212, 212);" class="col-md-6 col-md-offset-2">
+    <h2>Add Employee</h2>
+    <br />
+    <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+
+        <div class="form-group">
+            <label for="empName">Employee Name: </label>
+            <input formControlName="empName" placeholder="employee Name" name="empName" class="form-control"
+                id="empName">
+            <div *ngIf="submitted && addForm.controls.empName.errors" class="error">
+            
+                <div class="text-danger" *ngIf="addForm.controls.empName.errors.required">Employee Name is required
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" formControlName="email" placeholder="email" name="email" class="form-control"
+                id="email">
+            <div *ngIf="submitted && addForm.controls.email.errors" class="error">
+                <div class="text-danger" *ngIf="addForm.controls.email.errors.required">email is required</div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="contactNo">Contact Number:</label>
+            <input type="contactNo" formControlName="contactNo" placeholder="contactNo" name="contactNo"
+                class="form-control" id="contactNo" minlength="10" maxlength="10" ng-required="true">
+            <div *ngIf="submitted && addForm.controls.contactNo.errors" class="error">
+                <div class="text-danger" *ngIf="addForm.controls.contactNo.errors.required">Contact is required</div>
+                <div class="text-danger" *ngIf="addForm.controls.contactNo.errors.minlength ">Enter correct length of
+                    the contact number</div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Save</button>&nbsp; &nbsp;
+        <button class="btn btn-danger" type="reset">Cancel</button>
+        &nbsp; &nbsp;
+        <a class="btn btn-warning" href="/list-employee">Back to List</a>
+
+        <br /><br />
+    </form>
+</div>
+</div>

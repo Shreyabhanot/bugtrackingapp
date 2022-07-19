@@ -1,0 +1,116 @@
+package com.capgemini.model;
+
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.capgemini.constants.ValidationErrorMessages;
+
+@Component("project")
+@Scope("prototype")
+@Entity
+@Table(name = "PROJECT_TBL")
+public class Project {
+
+	@Id
+
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROJ_SEQ_GEN")
+	@SequenceGenerator(sequenceName = "proj_seq_gen", allocationSize = 1, name = "PROJ_SEQ_GEN")
+	@Column(name = "PROJECT_ID")
+	private int projectId;
+
+	@NotNull(message = ValidationErrorMessages.PROJECT_OWNER_NAME_NOT_NULL)
+	@Size(min = 2, message = ValidationErrorMessages.PROJECT_OWNER_NAME_INVALID)
+	@Column(name = "PROJECT_OWNER")
+	private String projectOwner;
+
+	@Column(name = "STATUS")
+	private String status;
+
+	
+	@OneToMany(mappedBy = "project")
+	private Set<Bug> bugs;
+
+	public Project() {
+	}
+
+	public Project(String projectOwner, String status) {
+		super();
+		this.projectOwner = projectOwner;
+		this.status = status;
+	}
+
+	public int getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(int projectId) {
+		this.projectId = projectId;
+	}
+
+	public String getProjectOwner() {
+		return projectOwner;
+	}
+
+	public void setProjectOwner(String projectOwner) {
+		this.projectOwner = projectOwner;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	@Override
+	public String toString() {
+		return "Project [projectId=" + projectId + ", projectOwner=" + projectOwner + ", status=" + status + "]";
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Project other = (Project) obj;
+		if (bugs == null) {
+			if (other.bugs != null)
+				return false;
+		} else if (!bugs.equals(other.bugs))
+			return false;
+		if (projectId != other.projectId)
+			return false;
+		if (projectOwner == null) {
+			if (other.projectOwner != null)
+				return false;
+		} else if (!projectOwner.equals(other.projectOwner))
+			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
+			return false;
+		return true;
+	}
+
+}

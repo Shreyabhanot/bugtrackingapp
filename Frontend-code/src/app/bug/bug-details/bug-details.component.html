@@ -1,0 +1,90 @@
+<div class="container">
+<br>
+<div style="background-color: rgb(216, 212, 212);" class="col-lg-10">
+    <br>
+    <h2>Bug Details</h2>
+    <br><br>
+    <dl class="row">
+        <dt class="col-sm-3">Bug Id</dt>
+        <dd class="col-sm-9">{{bug.bugId}}</dd>
+
+        <dt class="col-sm-3">Bug Title</dt>
+        <dd class="col-sm-9">{{bug.title}}</dd>
+
+        <dt class="col-sm-3">Bug Description</dt>
+        <dd class="col-sm-9">{{bug.bugDesc}}</dd>
+
+        <dt class="col-sm-3">Bug Type</dt>
+        <dd class="col-sm-9">{{bug.type | titlecase}}</dd>
+
+        <dt class="col-sm-3">Bug Status</dt>
+        <dd class="col-sm-9">{{bug.status | titlecase}}</dd>
+
+        <dt class="col-sm-3">Bug Start Date</dt>
+        <dd class="col-sm-9">{{bug.startDate | date: "yyyy-MM-dd"}}</dd>
+
+        <dt class="col-sm-3">Bug End Date</dt>
+        <dd class="col-sm-9">{{bug.endDate | date: "yyyy-MM-dd"}}</dd>
+
+        <dt class="col-sm-3">Bug Priority</dt>
+        <dd class="col-sm-9">{{bug.priority | titlecase}}</dd>
+
+        <br><br>
+
+        <dt class="col-sm-3">Project Details</dt>
+        <dd class="col-sm-9">
+            <dl class="row">
+                <dt class="col-sm-4">Project Id</dt>
+                <dd class="col-sm-8">{{bug.project.projectId}}</dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-4">Project Owner</dt>
+                <dd class="col-sm-8">{{bug.project.projectOwner}}</dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-4">Project Status</dt>
+                <dd class="col-sm-8">{{bug.project.status}}</dd>
+            </dl>
+
+        </dd>
+
+        <br><br>
+
+        <dt class="col-sm-3">Assignee Details</dt>
+        <dd class="col-sm-9">
+            <dl class="row">
+
+                <dt class="col-sm-4">Employee Id</dt>
+                <dd class="col-sm-8">{{bug.employee.employeeId}}</dd>
+            </dl>
+
+            <dl class="row">
+
+                <dt class="col-sm-4">Employee Name</dt>
+                <dd class="col-sm-8">{{bug.employee.empName}}</dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="col-sm-4">Employee Email Id</dt>
+                <dd class="col-sm-8">{{bug.employee.email}}</dd>
+            </dl>
+
+            <dl class="row">
+
+                <dt class="col-sm-4">Employee Contact No</dt>
+                <dd class="col-sm-8">{{bug.employee.empName}}</dd>
+            </dl>
+
+        </dd>
+
+
+
+
+    </dl>
+
+    <button class="btn btn-secondary" (click)=editBug(bug)>Edit</button> &nbsp; &nbsp;
+    <a class="btn btn-warning" href="/list-bug" role="button">Back to List</a>
+<br> <br> <br>
+
+</div>
+</div>

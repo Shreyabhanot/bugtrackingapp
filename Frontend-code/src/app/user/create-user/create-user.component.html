@@ -1,0 +1,41 @@
+<style>
+    .container{
+        margin: auto;
+        width: 60%;
+        padding:10px;
+    
+    }
+    </style>
+
+<br>
+<div class="container">
+    <h3>Create a New User</h3>
+    <br>
+
+    <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password"  class="form-control" formControlName="password" id="password" [ngClass]="{'is-invalid':
+            createUserForm.get('password').touched && createUserForm.get('password').invalid}">
+            <div class="invalid-feedback">
+                <div>Password is required !</div>
+            </div>
+        </div>
+        <div>
+            <label for="role">Role:</label>
+            <select class="form-control" formControlName="role" id="role" [ngClass]="{'is-invalid':
+            createUserForm.get('role').touched && createUserForm.get('role').invalid}">
+                <div class="invalid-feedback">
+                    <div>Role of User is required !</div>
+                </div>
+                <option value="employee">Employee</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-success">Create</button> &nbsp; &nbsp;
+        <a class="btn btn-warning" href="/home-admin" role="button">Cancel</a>
+        <br>
+    </form>
+
+</div>

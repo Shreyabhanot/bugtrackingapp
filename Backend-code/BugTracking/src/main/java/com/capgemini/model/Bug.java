@@ -1,0 +1,268 @@
+package com.capgemini.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Component;
+
+import com.capgemini.constants.ValidationErrorMessages;
+
+@Component("bug")
+@Scope("prototype")
+@Entity
+@Table(name="BUG_TBL")
+public class Bug{
+
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator= "BUG_SEQ_GEN")
+	@SequenceGenerator(sequenceName="bug_seq_gen", allocationSize= 1, name="BUG_SEQ_GEN")
+	@Column(name="BUG_ID")
+	private int bugId;
+	
+	@NotNull(message=ValidationErrorMessages.BUG_TITLE_NOT_NULL)
+	@Column(name="BUG_TITLE")
+	private String title;
+	
+	@NotNull(message=ValidationErrorMessages.BUG_DESCRIPTION_NOT_NULL)
+	@Size(min=2, message=ValidationErrorMessages.BUG_DESCRIPTION_LENGTH )
+	@Column(name="BUG_DESC")
+	private String bugDesc;
+	
+	@Column(name="STATUS")
+	@NotNull(message=ValidationErrorMessages.BUG_STATUS_NOT_NULL)
+	private String status;
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@NotNull(message=ValidationErrorMessages.BUG_STRT_DT_NOT_NULL)
+	@Column(name="START_DATE")
+	private Date startDate;
+	
+	@DateTimeFormat(pattern="yyyy-mm-dd")
+	@Column(name="END_DATE")
+	private Date endDate;
+	
+	
+	@NotNull(message=ValidationErrorMessages.BUG_TYPE_NOT_NULL)
+	@Column(name="TYPE")
+	private String type;
+	
+	@Column(name="PRIROTY")
+	private String priority;
+	
+	@Autowired
+	@ManyToOne
+	@JoinColumn(name="PROJECT_ID") 
+	private Project project;
+	
+	@Autowired
+	@ManyToOne
+	@JoinColumn(name="EMPLOYEE_ID")
+	private Employee employee;
+	
+
+	public Bug() {}
+
+
+	public Bug(@NotNull(message = "Bug Title must not be null.") String title,
+			@NotNull(message = "Bug Description must not be null.") @Size(min = 2, message = "Bug Description should be explanatory") String bugDesc,
+			@NotNull(message = "Bug Status cannot be null") String status,
+			@NotNull(message = "Start Date cannot be null") Date startDate, Date endDate,
+			@NotNull(message = "Bug Type cannot be null") String type, String priority) {
+		super();
+		this.title = title;
+		this.bugDesc = bugDesc;
+		this.status = status;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.type = type;
+		this.priority = priority;
+	}
+
+
+	public int getBugId() {
+		return bugId;
+	}
+
+
+	public void setBugId(int bugId) {
+		this.bugId = bugId;
+	}
+
+
+	public String getTitle() {
+		return title;
+	}
+
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+
+	public String getBugDesc() {
+		return bugDesc;
+	}
+
+
+	public void setBugDesc(String bugDesc) {
+		this.bugDesc = bugDesc;
+	}
+
+
+	public String getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+
+	public String getType() {
+		return type;
+	}
+
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+
+	public String getPriority() {
+		return priority;
+	}
+
+
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
+
+
+	public Project getProject() {
+		return project;
+	}
+
+
+	public void setProject(Project project) {
+		this.project = project;
+	}
+
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Bug [bugId=" + bugId + ", title=" + title + ", bugDesc=" + bugDesc + ", status=" + status
+				+ ", startDate=" + startDate + ", endDate=" + endDate + ", type=" + type + ", priority=" + priority
+				+ ", project=" + project + ", employee=" + employee + "]";
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Bug other = (Bug) obj;
+		if (bugDesc == null) {
+			if (other.bugDesc != null)
+				return false;
+		} else if (!bugDesc.equals(other.bugDesc))
+			return false;
+		if (bugId != other.bugId)
+			return false;
+		if (employee == null) {
+			if (other.employee != null)
+				return false;
+		} else if (!employee.equals(other.employee))
+			return false;
+		if (endDate == null) {
+			if (other.endDate != null)
+				return false;
+		} else if (!endDate.equals(other.endDate))
+			return false;
+		if (priority == null) {
+			if (other.priority != null)
+				return false;
+		} else if (!priority.equals(other.priority))
+			return false;
+		if (project == null) {
+			if (other.project != null)
+				return false;
+		} else if (!project.equals(other.project))
+			return false;
+		if (startDate == null) {
+			if (other.startDate != null)
+				return false;
+		} else if (!startDate.equals(other.startDate))
+			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
+	}
+
+	
+	
+	
+
+}

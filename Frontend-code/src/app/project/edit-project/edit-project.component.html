@@ -1,0 +1,39 @@
+
+<div class="container">
+    <div style="background-color:  rgb(216, 212, 212);" class="col-md-6 col-md-offset-2">
+<br /><br />
+<h2>Edit Project</h2> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    <br />
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+
+        <div  class="form-group">
+            <label for="projectId"></label>
+            <input readonly="readonly" formControlName="projectId" placeholder="Project Id" name="projectId" class="form-control"
+                id="projectId">
+        </div>
+
+        <div class="form-group">
+            <label for="projectOwner"></label>
+            <input formControlName="projectOwner" placeholder="Project Owner" name="projectOwner" class="form-control"
+                id="projectOwner">
+            <div *ngIf="submitted && editForm.controls.projectOwner.errors" class="error">
+                <div class="text-danger" *ngIf="editForm.controls.projectOwner.errors.required">Project Owner is
+                    required</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="status"></label>
+            <input formControlName="status" placeholder="status" name="status" class="form-control" id="status">
+            <div *ngIf="submitted && editForm.controls.status.errors" class="error">
+                <div class="text-danger" *ngIf="editForm.controls.status.errors.required">Status is required</div>
+            </div>
+        </div>
+
+
+
+
+        <button class="btn btn-success">Update</button>&nbsp; &nbsp;
+        <a class="btn btn-danger" href="/list-project">Cancel</a>
+        <br /><br />
+    </form>
