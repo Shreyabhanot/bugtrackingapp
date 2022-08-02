@@ -49,6 +49,6 @@ Start the server
 ```
 
 ### Backend
-Import the maven project.
+Import the maven project in Spring Tool Suite.
 Provide your database username and password in application.properties.
 And run the Main.Java file to start the application.
